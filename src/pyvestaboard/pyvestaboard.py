@@ -49,8 +49,8 @@ class VestaBoard:
         for char in message_chars:
             if char == "\n":
                 index = 0
-                if len(cur_row) > 0:
-                    message_rows += [cur_row]
+                # if len(cur_row) > 0:
+                message_rows += [cur_row]
                 cur_row = []
                 continue
             cur_row += [char]
@@ -104,7 +104,7 @@ class VestaBoard:
         }
         return headers
     
-    def get_raw_message(self) -> list[list[str]]:
+    def get_raw_message(self) -> list[list[int]]:
         try:
             response = requests.get(
                 f"http://{self.ip}:{self.port}/local-api/message",
@@ -123,7 +123,16 @@ class VestaBoard:
 
         return response_dict["message"]
     
-    def get_current_message(self, multiline: bool = False):
+    def get_encoded_message(self) ->  list[list[str]]:
+        # FIXME: Add tests and custom exceptions
+        raw_message = self.get_raw_message()
+        decoded_message = VestaCodes.blank_message()
+        for i, row in enumerate(raw_message):
+            for j, code in enumerate(row):
+                decoded_message[i][j] = vc.from_code(code)
+        return decoded_message
+    
+    def get_current_message(self, multiline: bool = False) -> str:
         # FIXME: Add tests and custom exceptions
         raw_message = self.get_raw_message()
         message = ""
