@@ -26,9 +26,9 @@ class VestaBoard:
     VERTICAL_ALIGN_BOTTOM = "bottom"
     VERTICAL_ALIGN_JUSTIFIED = "justified"
     
-    HORIZONTAL_ALIGN_LEFT = "top"
-    HORIZONTAL_ALIGN_CENTER = "middle"
-    HORIZONTAL_ALIGN_RIGHT = "bottom"
+    HORIZONTAL_ALIGN_LEFT = "left"
+    HORIZONTAL_ALIGN_CENTER = "center"
+    HORIZONTAL_ALIGN_RIGHT = "right"
     HORIZONTAL_ALIGN_JUSTIFIED = "justified"
     
     @classmethod
@@ -47,22 +47,22 @@ class VestaBoard:
         index = 0
         cur_row = []
         for char in message_chars:
-            if char == "\n":
-                index = 0
-                # if len(cur_row) > 0:
-                message_rows += [cur_row]
-                cur_row = []
-                continue
             cur_row += [char]
-            if index == 21:
-                index = 0
-                message_rows += [cur_row]
-                cur_row = []
             index += 1
+            row_overflowed = index > COLUMNS
+            if char == "\n" or row_overflowed:
+                message_rows += [cur_row[:-1]]
+                if row_overflowed and not char == "\n":
+                    cur_row = [char]
+                    index = 1
+                else:
+                    cur_row = []
+                    index = 0
+
         if len(cur_row) > 0:
             message_rows += [cur_row]
-        
-        if len(message_rows) > 6:
+
+        if len(message_rows) > ROWS:
             raise Exception("Message has too many rows")
         
         t_padding = 0
@@ -113,7 +113,7 @@ class VestaBoard:
             )
             if not response.ok:
                 raise CommunicationException(
-                    f"Vestaboard returned unexpected status {response.status}"
+                    f"Vestaboard returned unexpected status {response.status_code}"
                 )
             response_dict = response.json()
         except requests.RequestException:
