@@ -4,6 +4,7 @@ import json
 import os
 import enum
 import sys
+from blessings import Terminal
 
 from pyvestaboard import VestaBoard, CommunicationException
 
@@ -61,6 +62,8 @@ def get_piped_input() -> str | None:
 )
 @click.argument("message", required=False)
 def cli(command, message) -> int:
+    term = Terminal()
+    
     piped_message = get_piped_input()
     # FIXME: We're just going to ignore the message argument if there's piped input is
     # that the right thing to do? Combine them somehow? Or add a flag to combine them?
@@ -76,8 +79,16 @@ def cli(command, message) -> int:
     try:
         match command:
             case CommandType.GET:
-                message = vb.get_current_message(multiline=False)
-                click.echo(message)
+                message = vb.get_current_message(multiline=True)\
+                # Swap Emoji with (hopefully) monospaced characters to preserve alignment
+                message = message.replace('🟩', term.green('■'))
+                message = message.replace('⬜️', term.white('■'))
+                message = message.replace('🟦', term.blue('■'))
+                message = message.replace('🟪', term.magenta('■'))
+                message = message.replace('🟥', term.red('■'))
+                message = message.replace('🟧', term.bright_red('■'))
+                message = message.replace('🟨', term.bright_yellow('■'))
+                click.echo(message, nl=False)
             case CommandType.SEND:
                 # No-op if no message has been passed (POSIX compliance)
                 if message is not None:
