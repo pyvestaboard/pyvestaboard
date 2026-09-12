@@ -25,11 +25,23 @@ class VestaBoard:
     VERTICAL_ALIGN_MIDDLE = "middle"
     VERTICAL_ALIGN_BOTTOM = "bottom"
     VERTICAL_ALIGN_JUSTIFIED = "justified"
+    VERTICAL_ALIGN_OPTIONS = [
+        VERTICAL_ALIGN_TOP,
+        VERTICAL_ALIGN_MIDDLE,
+        VERTICAL_ALIGN_BOTTOM,
+        VERTICAL_ALIGN_JUSTIFIED,
+    ]
     
     HORIZONTAL_ALIGN_LEFT = "left"
     HORIZONTAL_ALIGN_CENTER = "center"
     HORIZONTAL_ALIGN_RIGHT = "right"
     HORIZONTAL_ALIGN_JUSTIFIED = "justified"
+    HORIZONTAL_ALIGN_OPTIONS = [
+        HORIZONTAL_ALIGN_LEFT,
+        HORIZONTAL_ALIGN_CENTER,
+        HORIZONTAL_ALIGN_RIGHT,
+        HORIZONTAL_ALIGN_JUSTIFIED,
+    ]
     
     @classmethod
     def blank_message(cls):
