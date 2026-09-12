@@ -4,6 +4,7 @@ import json
 import os
 import enum
 import sys
+
 from blessings import Terminal
 
 from pyvestaboard import VestaBoard, CommunicationException
@@ -43,7 +44,7 @@ def load_stored_preferences():
     except Exception as ex:
         raise ex
     
-    return prefs	
+    return prefs
 
 def get_piped_input() -> str | None:
     piped_message = None
